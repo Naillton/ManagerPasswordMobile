@@ -49,6 +49,10 @@ class LoginScreen {
             txtPassValue = it
         }
 
+        fun changeValueButton(): Boolean {
+            return txtFieldValue.length >= 11 && txtPassValue.length >= 8
+        }
+
         val onTouchLogin = {
             navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
                 launchSingleTop = true
@@ -85,7 +89,7 @@ class LoginScreen {
                visualTransformation = PasswordVisualTransformation(),
            )
 
-           BtnField({ onTouchLogin() }, "Login", Color(0.475f, 0.094f, 0.82f))
+           BtnField({ onTouchLogin() }, "Login", Color(0.475f, 0.094f, 0.82f), changeValueButton())
 
            Spacer(modifier = Modifier.height(20.dp))
 
@@ -138,11 +142,13 @@ class LoginScreen {
     fun BtnField(
         onTouch: () -> Unit,
         text: String,
-        color: Color
+        color: Color,
+        isEnable: Boolean
     ) {
         Button(
             onClick = { onTouch() },
-            colors = ButtonDefaults.buttonColors(color)
+            colors = ButtonDefaults.buttonColors(color),
+            enabled = isEnable
         ) {
             Text(text = text.uppercase(), color = Color.White)
         }

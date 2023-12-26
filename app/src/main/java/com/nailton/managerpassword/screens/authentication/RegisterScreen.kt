@@ -52,6 +52,10 @@ class RegisterScreen {
             txtPassValue = it
         }
 
+        fun changeValueButton(): Boolean {
+            return txtFieldEmail.length >= 11 && txtPassValue.length >= 8 && txtFieldValue.length >= 3
+        }
+
         val onTouchLogin = {
             navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
                 launchSingleTop = true
@@ -93,7 +97,7 @@ class RegisterScreen {
                 visualTransformation = PasswordVisualTransformation(),
             )
 
-            BtnField({ onTouchLogin() }, "Register", Color(0.475f, 0.094f, 0.82f))
+            BtnField({ onTouchLogin() }, "Register", Color(0.475f, 0.094f, 0.82f), changeValueButton())
         }
     }
 
@@ -137,11 +141,13 @@ class RegisterScreen {
     fun BtnField(
         onTouch: () -> Unit,
         text: String,
-        color: Color
+        color: Color,
+        isTrue: Boolean
     ) {
         Button(
             onClick = { onTouch() },
-            colors = ButtonDefaults.buttonColors(color)
+            colors = ButtonDefaults.buttonColors(color),
+            enabled = isTrue
         ) {
             Text(text = text.uppercase(), color = Color.White)
         }
