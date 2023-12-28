@@ -38,13 +38,14 @@ class LoginScreen {
 
     @Composable
     fun Login(navController: NavController) {
+
         var txtFieldValue by rememberSaveable { mutableStateOf("") }
         var txtPassValue by rememberSaveable { mutableStateOf("") }
-        
+
         val onChangeValue = { it: String ->
             txtFieldValue = it
         }
-        
+
         val onChangePassValue = {it: String ->
             txtPassValue = it
         }
