@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0-rc01")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.dagger:dagger:2.47")
     implementation("androidx.room:room-ktx:2.6.1")
