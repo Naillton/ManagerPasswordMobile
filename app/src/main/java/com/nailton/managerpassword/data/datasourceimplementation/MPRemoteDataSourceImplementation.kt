@@ -7,7 +7,10 @@ import retrofit2.Response
 
 class MPRemoteDataSourceImplementation(
     private val MPService: MPService,
-    private val authToken: String
+    private var email: String,
+    private var password: String
 ): PasswordRemoteDataSource {
-    override suspend fun getPasswords(): Response<PasswordList> = MPService.getPasswords(authToken)
+
+    override suspend fun loginUser(): Response<String> = MPService.loginUser(email, password)
+    override suspend fun getPasswords(): Response<PasswordList> = MPService.getPasswords(loginUser().body()!!)
 }

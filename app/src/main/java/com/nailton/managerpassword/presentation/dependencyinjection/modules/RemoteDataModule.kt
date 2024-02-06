@@ -8,11 +8,11 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RemoteDataModule {
+class RemoteDataModule(private var email: String, private var password: String) {
 
     @Singleton
     @Provides
     fun providesRemoteData(mpService: MPService): PasswordRemoteDataSource {
-        return MPRemoteDataSourceImplementation(mpService)
+        return MPRemoteDataSourceImplementation(mpService, email, password)
     }
 }
