@@ -3,11 +3,11 @@ package com.nailton.managerpassword.presentation.configmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.nailton.managerpassword.domain.usecases.GetPasswordsUseCase
-import com.nailton.managerpassword.domain.usecases.loginUseCase
+import com.nailton.managerpassword.domain.usecases.LoginUseCase
 
 class MyViewModel(
     private val getPasswordsUseCase: GetPasswordsUseCase,
-    private val loginUseCase: loginUseCase
+    private val loginUseCase: LoginUseCase
 ): ViewModel() {
 
     fun getPasswords() = liveData {

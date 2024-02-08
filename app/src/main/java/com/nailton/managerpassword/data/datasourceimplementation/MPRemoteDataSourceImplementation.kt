@@ -9,6 +9,6 @@ class MPRemoteDataSourceImplementation(
     private val MPService: MPService,
     private var authToken: String
 ): PasswordRemoteDataSource {
-
+    override suspend fun loginUser(email: String, password: String): Response<String> = MPService.loginUser(email, password)
     override suspend fun getPasswords(): Response<PasswordList> = MPService.getPasswords(authToken)
 }
