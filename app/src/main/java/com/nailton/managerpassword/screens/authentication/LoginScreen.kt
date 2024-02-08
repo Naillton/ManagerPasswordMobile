@@ -1,5 +1,6 @@
 package com.nailton.managerpassword.screens.authentication
 
+import android.app.Application
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.AppComponent
+import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.Injector
+import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.MPSubComponent
 import com.nailton.managerpassword.routes.NavigationRoutes
 import com.nailton.managerpassword.routes.graph.RootNavGraph
 

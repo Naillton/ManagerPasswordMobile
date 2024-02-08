@@ -1,5 +1,6 @@
 package com.nailton.managerpassword.presentation.dependencyinjection.modules
 
+import com.nailton.managerpassword.data.API.MPService
 import com.nailton.managerpassword.data.MPRepositoryImplementation
 import com.nailton.managerpassword.data.datasource.PasswordCacheDataSource
 import com.nailton.managerpassword.data.datasource.PasswordLocalDataSource
@@ -17,12 +18,14 @@ class RepositoryModule {
     fun provideMPRepository(
         mpRemoteDataSource: PasswordRemoteDataSource,
         mpCacheDataSource: PasswordCacheDataSource,
-        mpLocalDataSource: PasswordLocalDataSource
+        mpLocalDataSource: PasswordLocalDataSource,
+        mpService: MPService
     ): MPRepository {
         return MPRepositoryImplementation(
             mpRemoteDataSource,
             mpLocalDataSource,
-            mpCacheDataSource
+            mpCacheDataSource,
+            mpService
         )
     }
 }

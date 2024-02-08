@@ -1,6 +1,7 @@
 package com.nailton.managerpassword.data
 
 import android.provider.Settings.Global
+import com.nailton.managerpassword.data.API.MPService
 import com.nailton.managerpassword.data.datasource.PasswordCacheDataSource
 import com.nailton.managerpassword.data.datasource.PasswordLocalDataSource
 import com.nailton.managerpassword.data.datasource.PasswordRemoteDataSource
@@ -10,12 +11,13 @@ import com.nailton.managerpassword.domain.repository.MPRepository
 class MPRepositoryImplementation(
     private val mpRemoteDataSource: PasswordRemoteDataSource,
     private val mpLocalDataSource: PasswordLocalDataSource,
-    private val mpCacheDataSource: PasswordCacheDataSource
+    private val mpCacheDataSource: PasswordCacheDataSource,
+    private val mpService: MPService
 ): MPRepository {
-    override suspend fun loginUser(): String {
+    override suspend fun loginUser(email: String, password: String): String {
         lateinit var authToken: String
         try {
-            val response = mpRemoteDataSource.loginUser()
+            val response = mpService.loginUser(email, password)
             val body = response.body()
             if (body != null) {
                 authToken = response.body()!!
@@ -24,6 +26,7 @@ class MPRepositoryImplementation(
 
         return authToken
     }
+
 
     override suspend fun getPasswords(): List<PasswordData>? {
         return getPasswordsFromCache()

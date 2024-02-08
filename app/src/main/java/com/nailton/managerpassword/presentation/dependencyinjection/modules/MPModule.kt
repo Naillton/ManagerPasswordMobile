@@ -1,7 +1,7 @@
 package com.nailton.managerpassword.presentation.dependencyinjection.modules
 
 import com.nailton.managerpassword.domain.usecases.GetPasswordsUseCase
-import com.nailton.managerpassword.domain.usecases.LoginUserUseCase
+import com.nailton.managerpassword.domain.usecases.loginUseCase
 import com.nailton.managerpassword.presentation.configmodel.ViewModelFactory
 import com.nailton.managerpassword.presentation.dependencyinjection.annotations.MPScope
 import dagger.Module
@@ -14,8 +14,8 @@ class MPModule {
     @Provides
     fun provideViewModelFactory(
         getPasswordsUseCase: GetPasswordsUseCase,
-        loginUserUseCase: LoginUserUseCase
+        loginUseCase: loginUseCase
     ): ViewModelFactory {
-        return ViewModelFactory(getPasswordsUseCase, loginUserUseCase)
+        return ViewModelFactory(getPasswordsUseCase, loginUseCase)
     }
 }

@@ -11,7 +11,7 @@ interface MPSubComponent {
     fun inject(loginScreen: LoginScreen)
 
     @Subcomponent.Factory
-    interface factory {
+    interface Factory {
         fun create(): MPSubComponent
     }
 }
