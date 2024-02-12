@@ -1,6 +1,8 @@
 package com.nailton.managerpassword.screens.authentication
 
-import android.app.Application
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,25 +28,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.AppComponent
+import com.nailton.managerpassword.presentation.configmodel.MyViewModel
+import com.nailton.managerpassword.presentation.configmodel.ViewModelFactory
 import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.Injector
-import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.MPSubComponent
 import com.nailton.managerpassword.routes.NavigationRoutes
 import com.nailton.managerpassword.routes.graph.RootNavGraph
+import javax.inject.Inject
 
-class LoginScreen {
+class LoginScreen: AppCompatActivity() {
+
+    //@Inject
+    lateinit var factory: ViewModelFactory
+    private lateinit var mpViewModel: MyViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (applicationContext as Injector).createMPSubComponent().inject(this)
+        mpViewModel = ViewModelProvider(this, factory)[MyViewModel::class.java]
+    }
 
     @Composable
     fun Login(navController: NavController) {
 
+        val context = LocalContext.current
+        val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+        //val viewModelStore: ViewModelStoreOwner? = LocalViewModelStoreOwner.current
         var txtFieldValue by rememberSaveable { mutableStateOf("") }
         var txtPassValue by rememberSaveable { mutableStateOf("") }
+        //mpViewModel = ViewModelProvider(viewModelStore!!,factory)[MyViewModel::class.java]
 
         val onChangeValue = { it: String ->
             txtFieldValue = it
@@ -59,9 +81,22 @@ class LoginScreen {
         }
 
         val onTouchLogin = {
-            navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
-                launchSingleTop = true
-            }
+            val responseLiveData = mpViewModel.loginUser(txtFieldValue, txtPassValue)
+            responseLiveData.observe(lifecycleOwner, Observer {
+                if (it != null) {
+                    if (it.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "No User Found",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
+                            launchSingleTop = true
+                        }
+                    }
+                }
+            })
         }
 
         val onTouchRegister = {

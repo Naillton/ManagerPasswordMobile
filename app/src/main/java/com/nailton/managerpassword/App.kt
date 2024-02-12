@@ -8,11 +8,13 @@ import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.M
 import com.nailton.managerpassword.presentation.dependencyinjection.modules.AppModule
 import com.nailton.managerpassword.presentation.dependencyinjection.modules.NetModule
 import com.nailton.managerpassword.presentation.dependencyinjection.modules.RemoteDataModule
+import com.nailton.managerpassword.viewModel.TokenModel
 
 class App: Application(), Injector {
     private lateinit var appComponent: AppComponent
-    private val baseURL = "https://api.com"
-    private val authToken = "tokenvalidate"
+    private lateinit var modelToken: TokenModel
+    private val baseURL = "http://localhost:8080/"
+    private val authToken = modelToken.stateFlow.value
 
     override fun onCreate() {
         super.onCreate()
