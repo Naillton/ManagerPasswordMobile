@@ -17,7 +17,7 @@ class DatabaseModule {
         return Room.databaseBuilder(
             context,
             MPDatabase::class.java,
-            "Local Passwords"
+            "LocalPasswords"
         ).build()
     }
 

@@ -12,13 +12,13 @@ import com.nailton.managerpassword.viewModel.TokenModel
 
 class App: Application(), Injector {
     private lateinit var appComponent: AppComponent
-    private lateinit var modelToken: TokenModel
+    private var modelToken: TokenModel = TokenModel("")
     private val baseURL = "http://localhost:8080/"
-    private val authToken = modelToken.stateFlow.value
 
     override fun onCreate() {
         super.onCreate()
 
+        val authToken = modelToken.stateFlow.value
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(applicationContext))
             .netModule(NetModule(baseURL))
