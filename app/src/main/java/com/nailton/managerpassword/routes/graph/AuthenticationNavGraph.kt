@@ -5,8 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nailton.managerpassword.routes.NavigationRoutes
-import com.nailton.managerpassword.screens.authentication.LoginConfig
-import com.nailton.managerpassword.screens.authentication.LoginScreen
+import com.nailton.managerpassword.screens.authentication.ComposeLogin
 import com.nailton.managerpassword.screens.authentication.RegisterScreen
 
 fun NavGraphBuilder.authNavigation(navHostController: NavHostController) {
@@ -15,7 +14,7 @@ fun NavGraphBuilder.authNavigation(navHostController: NavHostController) {
         startDestination = NavigationRoutes.Login.routes
     ) {
         composable(NavigationRoutes.Login.routes) {
-            LoginScreen().Login(navController = navHostController, loginConfig = LoginConfig())
+            ComposeLogin().Login(navController =  navHostController)
         }
 
         composable(NavigationRoutes.Register.routes) {

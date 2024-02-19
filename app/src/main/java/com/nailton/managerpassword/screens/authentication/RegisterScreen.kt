@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -101,7 +102,6 @@ class RegisterScreen {
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TextField(
         text: String,
@@ -125,13 +125,13 @@ class RegisterScreen {
             leadingIcon = {
                 Icon(icons, contentDescription = "Icon")
             },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Cyan,
                 unfocusedBorderColor = Color.Black,
-                focusedLabelColor = Color.Cyan,
                 focusedLeadingIconColor = Color.Cyan,
+                unfocusedLeadingIconColor = Color.Black,
+                focusedLabelColor = Color.Cyan,
                 unfocusedLabelColor = Color.Black,
-                unfocusedLeadingIconColor = Color.Black
             )
         )
         Spacer(modifier = Modifier.height(20.dp))

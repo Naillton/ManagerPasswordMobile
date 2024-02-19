@@ -18,9 +18,9 @@
         android:theme="@style/Theme.ManagerPassword"
         tools:targetApi="31">
         <activity
-            android:name=".screens.authentication.LoginScreen2"
+            android:name=".screens.authentication.LoginScreen"
             android:exported="false"
-            android:label="@string/title_activity_login_screen2"
+            android:label="@string/title_activity_login_scren"
             android:theme="@style/Theme.ManagerPassword" />
         <activity
             android:name=".MainActivity"

@@ -12,7 +12,7 @@ class MPRepositoryImplementation(
     private val mpCacheDataSource: PasswordCacheDataSource
 ): MPRepository {
 
-    override suspend fun loginUser(email: String, password: String): String? {
+    override suspend fun loginUser(email: String, password: String): String {
         lateinit var authToken: String
         try {
             val response = mpRemoteDataSource.loginUser(email, password)

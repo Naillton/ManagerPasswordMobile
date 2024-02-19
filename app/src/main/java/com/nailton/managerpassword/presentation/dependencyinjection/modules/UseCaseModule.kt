@@ -15,7 +15,7 @@ class UseCaseModule {
     }
 
     @Provides
-    fun loginUserUseCase(mpRepository: MPRepository): LoginUseCase {
-        return loginUserUseCase(mpRepository)
+    fun providesLoginUseCase(mpRepository: MPRepository): LoginUseCase {
+        return LoginUseCase(mpRepository)
     }
 }
