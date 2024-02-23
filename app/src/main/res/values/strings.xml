@@ -3,4 +3,5 @@
     <string name="title_activity_login_screen2">LoginScreen2</string>
     <string name="title_activity_log">log</string>
     <string name="title_activity_login_scren">LoginScren</string>
+    <string name="title_activity_login_screen">loginScreen</string>
 </resources>

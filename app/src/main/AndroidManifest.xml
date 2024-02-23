@@ -20,7 +20,7 @@
         <activity
             android:name=".screens.authentication.LoginScreen"
             android:exported="false"
-            android:label="@string/title_activity_login_scren"
+            android:label="@string/title_activity_login_screen"
             android:theme="@style/Theme.ManagerPassword" />
         <activity
             android:name=".MainActivity"

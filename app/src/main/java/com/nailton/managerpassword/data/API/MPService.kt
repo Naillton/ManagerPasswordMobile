@@ -12,5 +12,6 @@ interface MPService {
     suspend fun loginUser(email: String, password: String): Response<String>
 
     @GET("/api/password")
-    suspend fun getPasswords(@Header("authorization") token: String): Response<PasswordList>
+    //@Header("authorization") token: String
+    suspend fun getPasswords(): Response<PasswordList>
 }

@@ -13,13 +13,10 @@ class MPRepositoryImplementation(
 ): MPRepository {
 
     override suspend fun loginUser(email: String, password: String): String {
-        lateinit var authToken: String
+        var authToken = "Ta aqui MPR"
         try {
             val response = mpRemoteDataSource.loginUser(email, password)
-            val body = response.body()
-            if (body != null) {
-                authToken = body
-            }
+            authToken = response.body() ?: ""
         } catch (_:Exception) {}
 
         return authToken

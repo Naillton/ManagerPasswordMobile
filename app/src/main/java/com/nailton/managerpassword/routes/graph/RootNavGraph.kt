@@ -1,5 +1,7 @@
 package com.nailton.managerpassword.routes.graph
 
+import android.content.Intent
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,7 +10,9 @@ import com.nailton.managerpassword.screens.authenticated.Authenticated
 
 class RootNavGraph {
     @Composable
-    fun RootNavigationGraph(navHostController: NavHostController) {
+    fun RootNavigationGraph(
+        navHostController: NavHostController,
+    ) {
         NavHost(
             navController = navHostController,
             route = Graph.ROOT,

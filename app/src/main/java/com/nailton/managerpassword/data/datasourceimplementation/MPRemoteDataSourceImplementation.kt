@@ -6,9 +6,8 @@ import com.nailton.managerpassword.data.passworddata.PasswordList
 import retrofit2.Response
 
 class MPRemoteDataSourceImplementation(
-    private val MPService: MPService,
-    private var authToken: String
+    private val MPService: MPService
 ): PasswordRemoteDataSource {
     override suspend fun loginUser(email: String, password: String): Response<String> = MPService.loginUser(email, password)
-    override suspend fun getPasswords(): Response<PasswordList> = MPService.getPasswords(authToken)
+    override suspend fun getPasswords(): Response<PasswordList> = MPService.getPasswords()
 }

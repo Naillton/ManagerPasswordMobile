@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.nailton.managerpassword.routes.graph.RootNavGraph
+import com.nailton.managerpassword.screens.authentication.LoginScreen
 import com.nailton.managerpassword.ui.theme.ManagerPasswordTheme
 import com.nailton.managerpassword.ui.theme.firstColor
 import com.nailton.managerpassword.ui.theme.secondColor
@@ -54,6 +55,6 @@ fun MainScreen() {
 @Composable
 fun GreetingPreview() {
     ManagerPasswordTheme {
-        MainScreen()
+        //MainScreen()
     }
 }
