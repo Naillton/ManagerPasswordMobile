@@ -1,9 +1,12 @@
 package com.nailton.managerpassword.data
 
+import android.util.Log
 import com.nailton.managerpassword.data.datasource.PasswordCacheDataSource
 import com.nailton.managerpassword.data.datasource.PasswordLocalDataSource
 import com.nailton.managerpassword.data.datasource.PasswordRemoteDataSource
 import com.nailton.managerpassword.data.passworddata.PasswordData
+import com.nailton.managerpassword.data.userdata.userDTO
+import com.nailton.managerpassword.data.userdata.userLoginDTO
 import com.nailton.managerpassword.domain.repository.MPRepository
 
 class MPRepositoryImplementation(
@@ -11,15 +14,37 @@ class MPRepositoryImplementation(
     private val mpLocalDataSource: PasswordLocalDataSource,
     private val mpCacheDataSource: PasswordCacheDataSource
 ): MPRepository {
-
-    override suspend fun loginUser(email: String, password: String): String {
-        var authToken = "Ta aqui MPR"
+    override suspend fun inserUser(name: String, email: String, password: String): String? {
         try {
-            val response = mpRemoteDataSource.loginUser(email, password)
-            authToken = response.body() ?: ""
-        } catch (_:Exception) {}
+            val user = userDTO(name, email, password)
+            val response = mpRemoteDataSource.insertUser(user)
+            if (response.raw().isSuccessful) {
+                response.body()?.charStream().let {
+                    if (it != null) {
+                        return it.readText()
+                    }
+                }
+            }
+            return "Failed to create user"
+        } catch (e: Exception) {
+            return e.message.toString()
+        }
+    }
 
-        return authToken
+    override suspend fun loginUser(email: String, password: String): Boolean {
+        try {
+            val user = userLoginDTO(email, password)
+            val response = mpRemoteDataSource.loginUser(user)
+            if (response.raw().isSuccessful) {
+                response.body()?.charStream()?.let {
+                    HeaderStore.authToken = it.readText()
+                    return true
+                }
+            }
+            return false
+        } catch (e:Exception) {
+            return false
+        }
     }
 
     override suspend fun getPasswords(): List<PasswordData>? {
@@ -28,11 +53,12 @@ class MPRepositoryImplementation(
 
     private suspend fun getPasswordsFromAPI(): List<PasswordData> {
         lateinit var passwordList: List<PasswordData>
-
+        val auth = HeaderStore.authToken
         try {
-            val response = mpRemoteDataSource.getPasswords()
-            val body = response.body()
+            val response = auth?.let { mpRemoteDataSource.getPasswords(it) }
+            val body = response?.body()
             if (body != null) {
+                Log.i("TAGB", body.passwords.toString())
                 passwordList = body.passwords
             }
         } catch (_: Exception) {}

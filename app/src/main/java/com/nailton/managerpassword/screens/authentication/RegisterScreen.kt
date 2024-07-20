@@ -1,5 +1,8 @@
 package com.nailton.managerpassword.screens.authentication
 
+import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,26 +23,70 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
+import com.nailton.managerpassword.presentation.configmodel.MyViewModel
+import com.nailton.managerpassword.presentation.configmodel.ViewModelFactory
+import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.Injector
 import com.nailton.managerpassword.routes.graph.RootNavGraph
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class RegisterScreen {
 
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private lateinit var mpViewModel: MyViewModel
+    private lateinit var valueRegister: String
+
+    @Composable
+    fun ResgisterConfig(navController: NavController) {
+        val context = LocalContext.current
+        val viewModelStore: ViewModelStoreOwner? = LocalViewModelStoreOwner.current
+        (context.applicationContext as Injector).createMPSubComponent().injectCreateUser(this)
+        mpViewModel = ViewModelProvider(viewModelStore!!, factory)[MyViewModel::class.java]
+        valueRegister = ""
+        Register(navController)
+    }
+
+    @SuppressLint("CoroutineCreationDuringComposition")
     @Composable
     fun Register(navController: NavController) {
+
+        val context = LocalContext.current
+        val owner = LocalLifecycleOwner.current
+        val coroutineScope = rememberCoroutineScope()
         var txtFieldValue by rememberSaveable { mutableStateOf("") }
         var txtFieldEmail by rememberSaveable { mutableStateOf("") }
         var txtPassValue by rememberSaveable { mutableStateOf("") }
+
+        fun registerUser(name: String, email: String, pass: String, owner: LifecycleOwner): CompletableDeferred<String> {
+            val response = mpViewModel.insertUser(name, email, pass)
+            val deferred = CompletableDeferred<String>()
+            response.observe(owner) {
+                deferred.complete(it.toString())
+            }
+            return deferred
+        }
 
         val onChangeEmail = {it: String ->
             txtFieldEmail = it
@@ -58,8 +105,25 @@ class RegisterScreen {
         }
 
         val onTouchLogin = {
-            navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
-                launchSingleTop = true
+            coroutineScope.launch {
+                valueRegister = withContext(Dispatchers.Main) {
+                    registerUser(txtFieldValue, txtFieldEmail, txtPassValue, owner).await()
+                }
+                if (valueRegister.contains("User Created")) {
+                    Toast.makeText(
+                        context,
+                        valueRegister,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    navController.navigate(RootNavGraph.Graph.AUTHENTICATION) {
+                        launchSingleTop = true
+                    }
+                }
+                Toast.makeText(
+                    context,
+                    valueRegister,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 

@@ -2,8 +2,8 @@ package com.nailton.managerpassword.domain.usecases
 
 import com.nailton.managerpassword.domain.repository.MPRepository
 
-class LoginUseCase(
+class InserUserUseCase(
     private val mpRepository: MPRepository
 ) {
-    suspend fun loginUser(email: String, password: String): Boolean = mpRepository.loginUser(email, password)
+    suspend fun insertUser(name: String, email: String, password: String): String? = mpRepository.inserUser(name, email, password)
 }

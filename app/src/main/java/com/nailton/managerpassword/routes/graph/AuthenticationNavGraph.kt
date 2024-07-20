@@ -21,7 +21,7 @@ fun NavGraphBuilder.authNavigation(navHostController: NavHostController) {
         }
 
         composable(NavigationRoutes.Register.routes) {
-            RegisterScreen().Register(navController = navHostController)
+            RegisterScreen().ResgisterConfig(navController = navHostController)
         }
     }
 }

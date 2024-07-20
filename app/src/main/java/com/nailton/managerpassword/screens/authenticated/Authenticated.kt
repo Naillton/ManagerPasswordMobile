@@ -2,21 +2,34 @@ package com.nailton.managerpassword.screens.authenticated
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,7 +44,6 @@ import com.nailton.managerpassword.ui.theme.secondColor
 
 class Authenticated {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun AuthenticatedBottom(navController: NavHostController = rememberNavController()) {
         Scaffold(
@@ -54,6 +66,7 @@ class Authenticated {
                 }
             },
             bottomBar = {
+                contentColorFor(backgroundColor = Color.Yellow)
                 BottomNavigationBar(navController = navController)
             }
         )
@@ -67,7 +80,7 @@ class Authenticated {
             startDestination = NavigationRoutes.Home.routes
         ) {
             composable(NavigationRoutes.Home.routes) {
-                HomeScreen().Home()
+                HomeScreen().HomeConfig(navController = navController)
             }
 
             composable(NavigationRoutes.Profile.routes) {
@@ -79,14 +92,17 @@ class Authenticated {
     @Composable
     fun BottomNavigationBar(navController: NavHostController) {
         NavigationBar(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
+            contentColor = Color.Cyan
         ) {
-            val backStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = backStackEntry?.destination?.route
+            //val backStackEntry by navController.currentBackStackEntryAsState()
+            //val currentRoute = backStackEntry?.destination?.route
 
             NavBarItens.barItens.forEach {
+                contentColorFor(backgroundColor = Color.Magenta)
                 NavigationBarItem(
-                    selected = currentRoute == it.route,
+                    //selected = currentRoute == it.route,
+                    selected = false,
                     onClick = {
                         navController.navigate(it.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -97,10 +113,15 @@ class Authenticated {
                         }
                     },
                     icon = {
-                        Icon(imageVector = it.image, contentDescription = it.title, tint = Color.Black)
+                        contentColorFor(backgroundColor = Color.Blue)
+                        Icon(
+                            imageVector = it.image,
+                            contentDescription = it.title,
+                            tint = Color.White
+                        )
                     },
                     label = {
-                        Text(text = it.title, color = Color.Black)
+                        Text(text = it.title, color = Color.White)
                     }
                 )
             }

@@ -1,5 +1,6 @@
 package com.nailton.managerpassword.presentation.dependencyinjection.modules
 
+import com.nailton.managerpassword.data.API.MPService
 import com.nailton.managerpassword.data.MPRepositoryImplementation
 import com.nailton.managerpassword.data.datasource.PasswordCacheDataSource
 import com.nailton.managerpassword.data.datasource.PasswordLocalDataSource

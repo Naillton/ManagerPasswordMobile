@@ -1,5 +1,7 @@
 package com.nailton.managerpassword.screens.authentication
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,19 +38,27 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
+import com.nailton.managerpassword.data.HeaderStore
 import com.nailton.managerpassword.presentation.configmodel.MyViewModel
 import com.nailton.managerpassword.presentation.configmodel.ViewModelFactory
 import com.nailton.managerpassword.presentation.dependencyinjection.interfaces.Injector
 import com.nailton.managerpassword.routes.NavigationRoutes
+import com.nailton.managerpassword.routes.graph.RootNavGraph
 import com.nailton.managerpassword.ui.theme.firstColor
 import com.nailton.managerpassword.ui.theme.secondColor
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 class LoginScreen {
 
@@ -62,22 +73,6 @@ class LoginScreen {
         (context.applicationContext as Injector).createMPSubComponent().inject(this)
         mpViewModel = ViewModelProvider(viewModelStore!!, factory)[MyViewModel::class.java]
         Login(navController)
-
-    }
-
-    private fun login(email: String, pass: String, owner: LifecycleOwner): String {
-        var value = ""
-        mpViewModel.loginUser(email, pass).observe(owner, Observer {
-            if (it != null) {
-                value = it.ifEmpty {
-                    "Ta vazio"
-                }
-                value = it
-            } else {
-                value = "Valor nulo"
-            }
-        })
-        return value
     }
 
     @Composable
@@ -132,13 +127,24 @@ class LoginScreen {
 
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     @Composable
     fun Login(navController: NavController) {
 
         val context = LocalContext.current
         val owner = LocalLifecycleOwner.current
+        val coroutineScope = rememberCoroutineScope()
         var txtFieldValue by rememberSaveable { mutableStateOf("") }
         var txtPassValue by rememberSaveable { mutableStateOf("") }
+
+        fun login(email: String, pass: String, owner: LifecycleOwner): CompletableDeferred<Boolean> {
+            val response = mpViewModel.loginUser(email, pass)
+            val deferred = CompletableDeferred<Boolean>()
+            response.observe(owner) {
+                deferred.complete(it)
+            }
+            return deferred
+        }
 
         val onChangeValue = { it: String ->
             txtFieldValue = it
@@ -153,12 +159,29 @@ class LoginScreen {
         }
 
         val onTouchLogin = {
-            val value = login(txtFieldValue, txtFieldValue, owner)
-            Toast.makeText(
-                context,
-                value,
-                Toast.LENGTH_LONG
-            ).show()
+            var valueLOGIN: Boolean
+            coroutineScope.launch {
+                valueLOGIN = withContext(Dispatchers.Main) {
+                    login(txtFieldValue, txtPassValue, owner).await()
+                }
+                Log.i("TAGI", valueLOGIN.toString())
+                if (valueLOGIN) {
+                    Toast.makeText(
+                        context,
+                        "Logged",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    navController.navigate(RootNavGraph.Graph.AUTHENTICATED) {
+                        launchSingleTop = true
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Invalid Fields",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
 
         val onTouchRegister = {
